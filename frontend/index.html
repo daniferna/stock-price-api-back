@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Latest Prices</title>
+    <!-- Tiny "no build" React so the stretch goal needs no toolchain. -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 2rem; }
+        table { border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 4px 10px; text-align: left; }
+        .error { color: #b00; }
+    </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+    const API = "http://localhost:8000/latest-prices";
+
+    function App() {
+        const [data, setData] = React.useState(null);
+        const [error, setError] = React.useState(null);
+
+        React.useEffect(() => {
+            fetch(API)
+                .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+                .then(setData)
+                .catch(e => setError(e.message));
+        }, []);
+
+        if (error) return <p className="error">Failed to load: {error}</p>;
+        if (!data) return <p>Loading…</p>;
+
+        return (
+            <div>
+                <h1>Latest Prices</h1>
+                {data.map(c => (
+                    <div key={c.ticker}>
+                        <h3>{c.name} ({c.ticker})</h3>
+                        <table>
+                            <thead><tr><th>Date</th><th>Close</th></tr></thead>
+                            <tbody>
+                            {c.prices.map(p => (
+                                <tr key={p.date}><td>{p.date}</td><td>{p.closingPrice}</td></tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: stock-price-api
+  datasource:
+    url: jdbc:h2:mem:stockdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+  h2:
+    console:
+      enabled: true
+
+alphavantage:
+  # Provided at interview time. Falls back to the documented "demo" key (only works for IBM).
+  api-key: ${ALPHAVANTAGE_API_KEY:demo}
+
+server:
+  port: 8000

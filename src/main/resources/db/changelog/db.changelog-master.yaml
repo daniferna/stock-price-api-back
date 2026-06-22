@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1-create-companies
+      author: api-platform
+      changes:
+        - createTable:
+            tableName: companies
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ticker
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+                    unique: true
+  - changeSet:
+      id: 2-seed-companies
+      author: api-platform
+      changes:
+        - insert:
+            tableName: companies
+            columns:
+              - column: { name: name, value: "Apple Inc" }
+              - column: { name: ticker, value: "AAPL" }
+        - insert:
+            tableName: companies
+            columns:
+              - column: { name: name, value: "Microsoft Corp" }
+              - column: { name: ticker, value: "MSFT" }
+        - insert:
+            tableName: companies
+            columns:
+              - column: { name: name, value: "Amazon.com Inc" }
+              - column: { name: ticker, value: "AMZN" }
